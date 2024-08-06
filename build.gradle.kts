@@ -17,6 +17,8 @@ import java.util.concurrent.*
 plugins {
     kotlin("multiplatform") version "2.0.0"
     id("com.android.library") version "8.2.2"
+    id("org.jetbrains.kotlinx.kover") version "0.8.3" apply false
+    id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.16.2"
     id("org.jetbrains.dokka") version "1.9.20"
     `maven-publish`
     signing
@@ -971,10 +973,12 @@ class MicroAmper(val project: Project) {
                 main = maybeCreate("${name}Main").also {
                     it.kotlin.srcDirIfExists("src$atName")
                     it.resources.srcDirIfExists("resources$atName")
+                    it.kotlin.srcDir("build/generated/ksp/$name/${name}Main/kotlin")
                 },
                 test = maybeCreate("${name}Test").also {
                     it.kotlin.srcDirIfExists("test$atName")
                     it.resources.srcDirIfExists("testResources$atName")
+                    it.kotlin.srcDir("build/generated/ksp/$name/${name}Test/kotlin")
                 }
             )
         }
@@ -987,6 +991,8 @@ class MicroAmper(val project: Project) {
             ssDependsOn("apple", "posix")
             ssDependsOn("appleNonWatchos", "apple")
             ssDependsOn("appleIosTvos", "apple")
+
+            maybeCreate("commonMain").kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
 
             for (platform in kotlinPlatforms) {
                 val isMacos = platform.startsWith("macos")
@@ -1122,6 +1128,7 @@ allprojects {
 
 subprojects {
     plugins.apply("org.jetbrains.dokka")
+    plugins.apply("org.jetbrains.kotlinx.kover")
 }
 
 allprojects {
@@ -1129,4 +1136,8 @@ allprojects {
         //println("DOKKA=$it")
         offlineMode.set(true)
     }
+}
+
+apiValidation {
+    ignoredProjects.addAll(listOf(rootProject.name))
 }
