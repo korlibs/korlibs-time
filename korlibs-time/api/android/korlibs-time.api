@@ -109,6 +109,7 @@ public abstract interface class korlibs/time/DateComponentsFormat : java/io/Seri
 	public static final field Companion Lkorlibs/time/DateComponentsFormat$Companion;
 	public abstract fun format (Lkorlibs/time/DateComponents;)Ljava/lang/String;
 	public abstract fun tryParse (Ljava/lang/String;Lkorlibs/time/DateComponents$Mode;Z)Lkorlibs/time/DateComponents;
+	public static synthetic fun tryParse$default (Lkorlibs/time/DateComponentsFormat;Ljava/lang/String;Lkorlibs/time/DateComponents$Mode;ZILjava/lang/Object;)Lkorlibs/time/DateComponents;
 }
 
 public final class korlibs/time/DateComponentsFormat$Companion {
@@ -142,6 +143,7 @@ public abstract interface class korlibs/time/DateFormat : java/io/Serializable {
 	public static final field Companion Lkorlibs/time/DateFormat$Companion;
 	public abstract fun format (Lkorlibs/time/DateTimeTz;)Ljava/lang/String;
 	public abstract fun tryParse (Ljava/lang/String;ZZ)Lkorlibs/time/DateTimeTz;
+	public static synthetic fun tryParse$default (Lkorlibs/time/DateFormat;Ljava/lang/String;ZZILjava/lang/Object;)Lkorlibs/time/DateTimeTz;
 }
 
 public final class korlibs/time/DateFormat$Companion {
@@ -1129,6 +1131,7 @@ public abstract interface class korlibs/time/TimeFormat : java/io/Serializable {
 	public static final field Companion Lkorlibs/time/TimeFormat$Companion;
 	public abstract fun format-LRDsOJo (J)Ljava/lang/String;
 	public abstract fun tryParse-f829m1k (Ljava/lang/String;ZZ)Lkotlin/time/Duration;
+	public static synthetic fun tryParse-f829m1k$default (Lkorlibs/time/TimeFormat;Ljava/lang/String;ZZILjava/lang/Object;)Lkotlin/time/Duration;
 }
 
 public final class korlibs/time/TimeFormat$Companion {

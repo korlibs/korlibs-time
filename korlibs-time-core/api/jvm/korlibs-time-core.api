@@ -266,13 +266,13 @@ public final class korlibs/time/core/CoreTime_jvmAndAndroidKt {
 }
 
 public abstract interface class korlibs/time/core/ICoreTime {
-	public abstract fun currentTimeMillis ()J
+	public fun currentTimeMillis ()J
 	public abstract fun currentTimeMillisDouble ()D
 	public abstract fun localTimezoneOffset-5sfh64U (J)J
-	public abstract fun performanceMillis ()D
-	public abstract fun sleep-LRDsOJo (J)V
-	public abstract fun unaccurateSleep-LRDsOJo (J)V
-	public abstract fun unaccurateYield ()V
+	public fun performanceMillis ()D
+	public fun sleep-LRDsOJo (J)V
+	public fun unaccurateSleep-LRDsOJo (J)V
+	public fun unaccurateYield ()V
 }
 
 public final class korlibs/time/core/ICoreTime$DefaultImpls {
