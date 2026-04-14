@@ -8,4 +8,4 @@ aliases:
   - jvmAndAndroid: [jvm, android]
 
 dependencies:
-  - com.soywiz:korlibs-annotations:6.0.0: exported
+  - org.korge:korlibs-annotations:6.1.0: exported

@@ -12,4 +12,9 @@ class CoreTimeTest {
         val end = CoreTime.currentTimeMillisDouble()
         assertTrue { (end - start) > 0 }
     }
+
+    @Test
+    fun testUnaccurateYield() {
+        CoreTime.unaccurateYield()
+    }
 }
