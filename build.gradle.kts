@@ -12,7 +12,7 @@ plugins {
     id("org.jetbrains.kotlinx.kover") version "0.9.3" apply false
     id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.18.1"
     id("org.jetbrains.dokka") version "2.1.0"
-    id("com.vanniktech.maven.publish") version "0.36.0" apply false
+    id("com.vanniktech.maven.publish") version "0.36.0"
 }
 
 var REAL_VERSION = System.getenv("FORCED_VERSION")
@@ -20,10 +20,7 @@ var REAL_VERSION = System.getenv("FORCED_VERSION")
     ?.replaceFirst(Regex("^v"), "")
     ?.replaceFirst(Regex("^w"), "")
     ?.replaceFirst(Regex("^z"), "")
-//?: rootProject.findProperty("version")
     ?: "999.0.0.999"
-
-//val REAL_VERSION = System.getenv("FORCED_VERSION") ?: "999.0.0.999"
 
 val JVM_TARGET = JvmTarget.JVM_1_8
 // JDK_VERSION controls Android compileOptions source/target compat only.
@@ -43,9 +40,6 @@ allprojects {
         mavenCentral()
         google()
         gradlePluginPortal()
-        //maven("https://maven.pkg.jetbrains.space/public/p/amper/amper")
-        //maven("https://www.jetbrains.com/intellij-repository/releases")
-        //maven("https://packages.jetbrains.team/maven/p/ij/intellij-dependencies")
     }
     version = REAL_VERSION
     group = GROUP
@@ -59,41 +53,17 @@ allprojects {
             sourceCompatibility = JavaVersion.VERSION_1_8
             targetCompatibility = JavaVersion.VERSION_1_8
         }
-        //signingConfigs {
-        //    debug {
-        //        […]
-        //    }
-        //    release {
-        //        […]
-        //    }
-        //}
+
         compileSdk = 33
         namespace = "org.korge.${project.name.replace("-", ".")}"
         defaultConfig {
             minSdk = 20
         }
-        //    defaultConfig {
-        //        applicationId "[…]"
-        //        minSdk 25
-        //        targetSdk 33
-        //        compileSdk 33
-        //        versionCode 33
-        //        versionName '33'
-        //        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        //        signingConfig signingConfigs.release
-        //    }
-        //buildTypes {
-        //    release {
-        //        […]
-        //    }
-        //}
     }
     MicroAmper(this).configure()
 }
 
 open class DenoTestTask : AbstractTestTask() {
-//open class DenoTestTask : KotlinTest() {
-
     //var isDryRun by org.jetbrains.kotlin.gradle.utils.property { false }
 
     @get:Internal
@@ -109,10 +79,6 @@ open class DenoTestTask : AbstractTestTask() {
         this.group = "verification"
         this.dependsOn("compileTestDevelopmentExecutableKotlinJs")
     }
-
-    //@Option(option = "tests", description = "Specify tests to execute as a filter")
-    //@Input
-    //var tests: String = ""
 
     init {
         this.reports {
@@ -311,16 +277,44 @@ subprojects {
                 }
             }
         }
-    }
 
-    kotlin {
-        //if (targets.any { it.name.contains("android") }) {
+        mavenPublishing {
+            publishToMavenCentral()
+            signAllPublications()
+
+            println("===> project name: ${project.name}, version: ${project.version}, group: ${project.group}")
+
+            coordinates(project.group.toString(), project.name, project.version.toString())
+
+            pom {
+                val defaultGitUrl = "https://github.com/korlibs/korlibs"
+                name.set(project.name)
+                description.set(project.description ?: project.name)
+                url.set(defaultGitUrl)
+                licenses {
+                    license {
+                        name.set("MIT")
+                        url.set("https://raw.githubusercontent.com/korlibs/korge/refs/heads/main/LICENSE")
+                    }
+                }
+                developers {
+                    developer {
+                        id.set("korge")
+                        name.set("Korge Team")
+                        email.set("info@korge.org")
+                    }
+                }
+                scm {
+                    url.set(defaultGitUrl)
+                }
+            }
+        }
+
         androidTarget {
             this.compilerOptions.jvmTarget.set(JVM_TARGET)
             publishLibraryVariants("release")
             //publishLibraryVariants("release", "debug")
         }
-        //}
     }
 
     tasks {
@@ -441,53 +435,7 @@ subprojects {
             duplicatesStrategy = DuplicatesStrategy.EXCLUDE
         }
     }
-
-    //println(tasks.findByName("jsProcessResources")!!::class)
-
-    // Publishing
-    extensions.configure<MavenPublishBaseExtension> {
-        if (project.hasSigningCredentials()) {
-            publishToMavenCentral()
-            signAllPublications()
-        }
-
-        coordinates(project.group.toString(), project.name, project.version.toString())
-
-        pom {
-            val defaultGitUrl = "https://github.com/korlibs/korlibs"
-            name.set(project.name)
-            description.set(project.description ?: project.name)
-            url.set(defaultGitUrl)
-            licenses {
-                license {
-                    name.set("MIT")
-                    url.set("https://raw.githubusercontent.com/korlibs/korge/refs/heads/main/LICENSE")
-                }
-            }
-            developers {
-                developer {
-                    id.set("korge")
-                    name.set("Korge Team")
-                    email.set("info@korge.org")
-                }
-            }
-            scm {
-                url.set(defaultGitUrl)
-            }
-        }
-    }
-
-    //println(KotlinCompilerVersion.VERSION)
 }
-
-/*
-rootProject.plugins.withType<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin> {
-    rootProject.the<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension>().apply{
-        this.nodeVersion = "20.12.2"
-        //download = false
-    }
-}
-*/
 
 
 // Tiny, coupled and limited variant of amper compatible with the current structure, so we can bump to Kotlin 2.0.0 in the meantime, while amper is discarded or evolved.
