@@ -279,8 +279,10 @@ subprojects {
         }
 
         mavenPublishing {
-            publishToMavenCentral()
-            signAllPublications()
+            if (project.hasSigningCredentials()) {
+                publishToMavenCentral()
+                signAllPublications()
+            }
 
             println("===> project name: ${project.name}, version: ${project.version}, group: ${project.group}")
 
