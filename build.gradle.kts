@@ -1,4 +1,3 @@
-import com.vanniktech.maven.publish.*
 import org.gradle.api.internal.tasks.testing.*
 import org.gradle.api.tasks.testing.logging.*
 import org.jetbrains.kotlin.gradle.dsl.*
@@ -262,11 +261,44 @@ private fun Project.hasSigningCredentials(): Boolean {
 }
 
 subprojects {
-    //apply<KotlinMultiplatformPlugin>()
     apply(plugin = "kotlin-multiplatform")
     apply(plugin = "com.vanniktech.maven.publish")
 
     configureCentralPortalCompatibilityProps()
+
+    mavenPublishing {
+        if (project.hasSigningCredentials()) {
+            publishToMavenCentral()
+            signAllPublications()
+        }
+
+        println("===> project name: ${project.name}, version: ${project.version}, group: ${project.group}")
+
+        coordinates(project.group.toString(), project.name, project.version.toString())
+
+        pom {
+            val defaultGitUrl = "https://github.com/korlibs/korlibs"
+            name.set(project.name)
+            description.set(project.description ?: project.name)
+            url.set(defaultGitUrl)
+            licenses {
+                license {
+                    name.set("MIT")
+                    url.set("https://raw.githubusercontent.com/korlibs/korge/refs/heads/main/LICENSE")
+                }
+            }
+            developers {
+                developer {
+                    id.set("korge")
+                    name.set("Korge Team")
+                    email.set("info@korge.org")
+                }
+            }
+            scm {
+                url.set(defaultGitUrl)
+            }
+        }
+    }
 
     kotlin {
         js {
@@ -274,40 +306,6 @@ subprojects {
             browser {
                 compilerOptions {
                     target.set("es2015")
-                }
-            }
-        }
-
-        mavenPublishing {
-            if (project.hasSigningCredentials()) {
-                publishToMavenCentral()
-                signAllPublications()
-            }
-
-            println("===> project name: ${project.name}, version: ${project.version}, group: ${project.group}")
-
-            coordinates(project.group.toString(), project.name, project.version.toString())
-
-            pom {
-                val defaultGitUrl = "https://github.com/korlibs/korlibs"
-                name.set(project.name)
-                description.set(project.description ?: project.name)
-                url.set(defaultGitUrl)
-                licenses {
-                    license {
-                        name.set("MIT")
-                        url.set("https://raw.githubusercontent.com/korlibs/korge/refs/heads/main/LICENSE")
-                    }
-                }
-                developers {
-                    developer {
-                        id.set("korge")
-                        name.set("Korge Team")
-                        email.set("info@korge.org")
-                    }
-                }
-                scm {
-                    url.set(defaultGitUrl)
                 }
             }
         }
